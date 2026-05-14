@@ -1006,6 +1006,20 @@ contexts:
         2: storage.modifier.ownership.consuming.swift
 
   modifier-actor-isolation:
+    # SE-0412 nonisolated(unsafe) (Swift 6.0)
+    # SE-0461 nonisolated(nonsending) (Swift 6.2)
+    - match: \b(nonisolated)\b(?=\s*\()
+      captures:
+        1: storage.modifier.actor-isolation.nonisolated.swift
+      push:
+        - match: \(
+          scope: punctuation.section.parens.begin.swift
+        - match: \)
+          scope: punctuation.section.parens.end.swift
+          pop: 1
+        - match: \b(?:unsafe|nonsending)\b
+          scope: constant.language.attribute-option.swift
+        - include: else-pop
     - match: \b(nonisolated)\b(?=\s|$)
       captures:
         1: storage.modifier.actor-isolation.nonisolated.swift
