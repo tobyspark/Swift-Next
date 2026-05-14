@@ -1084,6 +1084,11 @@ contexts:
         1: storage.modifier.ownership.borrowing.swift
         2: storage.modifier.ownership.consuming.swift
 
+    # SE-0430 sending parameter modifier (Swift 6.2)
+    - match: \b(sending)\b(?=\s+{{identifier}})
+      captures:
+        1: storage.modifier.sending.swift
+
   ### [ Scoped Expressions ] ############################################################
 
   parameter-list:
@@ -2236,6 +2241,8 @@ contexts:
             # literal-expression
             file | fileID | filePath
           | line | column | function | dsohandle
+          # SE-0420 #isolation (Swift 6.2)
+          | isolation
           )\b
         )
       captures:
