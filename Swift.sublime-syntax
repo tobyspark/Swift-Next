@@ -1653,6 +1653,7 @@ contexts:
 
             | autoclosure
             | available
+            | backDeployed
             | convention
             | derivative
             | differentiable
@@ -2035,7 +2036,7 @@ contexts:
       scope: keyword.operator.logical.swift
 
   compiler-compilation-condition:
-    - match: \b(os|arch|swift|compiler|targetEnvironment)\b
+    - match: \b(os|arch|swift|compiler|targetEnvironment|hasAttribute|hasFeature)\b
       scope: support.function.preprocessor.platform-condition.swift
       push:
         - match: \)
