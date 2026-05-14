@@ -336,6 +336,7 @@ contexts:
   literals:
     - include: floating-point-literal
     - include: integer-literal
+    - include: extended-regex-literal
     - include: extended-string-literal
     - include: string-literal
     - include: boolean-literal
@@ -468,6 +469,41 @@ contexts:
         - include: statements-scope-any
         - match: \)
           scope: punctuation.section.interpolation.end.swift
+          pop: 1
+
+  # SE-0354 / SE-0355 Regex Literals (Swift 5.7)
+  # Extended-delimiter form #/.../# (and ##/.../##, etc.) only. The bare
+  # /.../ form is deferred — see UPDATE_PLAN.md "Risk / hard cases" #1.
+  extended-regex-literal:
+    # Multi-line: opening #+/ at end of line, closing /#+ on its own line.
+    - match: (\#+)(/)\s*$
+      captures:
+        1: punctuation.definition.annotation.begin.swift
+        2: punctuation.definition.string.begin.swift
+      push:
+        - meta_include_prototype: false
+        - meta_scope: meta.string.regexp.swift string.regexp.swift
+        - match: ^\s*(/)(\#+)
+          captures:
+            1: punctuation.definition.string.end.swift
+            2: punctuation.definition.annotation.end.swift
+          pop: 1
+    # Single-line: #+/ ... /#+ on one line. Allows internal escaped or
+    # bare / since the # delimiters disambiguate.
+    - match: (\#+)(/)
+      captures:
+        1: punctuation.definition.annotation.begin.swift
+        2: punctuation.definition.string.begin.swift
+      push:
+        - meta_include_prototype: false
+        - meta_scope: meta.string.regexp.swift string.regexp.swift
+        - match: (/)(\#+)
+          captures:
+            1: punctuation.definition.string.end.swift
+            2: punctuation.definition.annotation.end.swift
+          pop: 1
+        - match: $
+          scope: invalid.illegal.unterminated-regex-literal.swift
           pop: 1
 
   extended-string-literal:
