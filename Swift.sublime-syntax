@@ -91,7 +91,7 @@ variables:
   dot_operator: (?![{{operator_character}}])[.][.{{operator_character}}]+
   operator_negative_lookahead: (?![.{{operator_character}}])
 
-  access_levels: '\b(?:(private)|(fileprivate)|(internal)|(public)|(open))\b'
+  access_levels: '\b(?:(private)|(fileprivate)|(internal)|(package)|(public)|(open))\b'
 
   generic_clause_chars: '{{identifier_character}}{{whitespaces}}<:&\.,\s`>'
   generic_clause_chars_call_site: '{{generic_clause_chars}}\?\!\(\)\[\]-'
@@ -972,11 +972,12 @@ contexts:
         1: storage.modifier.access-level.private.swift
         2: storage.modifier.access-level.fileprivate.swift
         3: storage.modifier.access-level.internal.swift
-        4: storage.modifier.access-level.public.swift
-        5: storage.modifier.access-level.open.swift
-        6: punctuation.section.parens.begin.swift
-        7: variable.parameter.setter-access-level.swift
-        8: punctuation.section.parens.end.swift
+        4: storage.modifier.access-level.package.swift
+        5: storage.modifier.access-level.public.swift
+        6: storage.modifier.access-level.open.swift
+        7: punctuation.section.parens.begin.swift
+        8: variable.parameter.setter-access-level.swift
+        9: punctuation.section.parens.end.swift
 
   modifier-mutation:
     - match: \b(?:(mutating)|(nonmutating))\b(?=\s|$)
