@@ -902,6 +902,21 @@ contexts:
 
   # Keywords used in declarations
   keyword-declarations:
+    # SE-0413 Typed throws `throws(E)` (Swift 6.0). Must precede the bare
+    # `throws` rule below so the `(E)` clause is consumed.
+    - match: \b(throws)\b(?=\s*\()
+      captures:
+        1: keyword.declaration.throws.swift
+      push:
+        - match: \(
+          scope: punctuation.section.parens.begin.swift
+        - match: \)
+          scope: punctuation.section.parens.end.swift
+          pop: 1
+        - include: types
+        - include: identifier-support
+        - include: identifier-consumer
+        - include: else-pop
     - match: \bthrows\b
       scope: keyword.declaration.throws.swift
     - match: \brethrows\b
