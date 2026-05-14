@@ -673,6 +673,13 @@ contexts:
       captures:
         1: keyword.operator.property-wrapper-projection.swift
 
+    # SE-0390 suppressed conformance (~Copyable, ~Escapable, ~Sendable)
+    # (Swift 5.9 onward). Must match before operator-custom which would
+    # otherwise eat the ~.
+    - match: (~)(?=[A-Z])
+      captures:
+        1: keyword.operator.suppressed-conformance.swift
+
   operator-custom:
     # operator
     - match: '{{operator}}'
@@ -764,6 +771,11 @@ contexts:
         2: keyword.operator.word.type-casting.as.swift
         3: keyword.operator.word.type-casting.as.optional.swift
         4: keyword.operator.word.type-casting.as.forced.swift
+
+    # SE-0366 consume operator (Swift 5.9)
+    - match: \b(consume)\b(?=\s+{{identifier}})
+      captures:
+        1: keyword.operator.word.consume.swift
 
   keyword-control-flows:
     # loop-statement
@@ -875,6 +887,11 @@ contexts:
       captures:
         1: keyword.control.flow.defer.swift
 
+    # SE-0390 discard statement (Swift 5.9)
+    - match: \b(discard)\b(?=\s+self\b)
+      captures:
+        1: keyword.control.flow.discard.swift
+
     # do-statement
     - match: (?:{{identifier}}\s*(:)\s*)?\b(do)\b
       captures:
@@ -966,6 +983,11 @@ contexts:
       captures:
         1: storage.modifier.mutation.mutating.swift
         2: storage.modifier.mutation.nonmutating.swift
+    # SE-0377 borrowing / consuming method modifiers (Swift 5.9)
+    - match: \b(?:(borrowing)|(consuming))\b(?=\s+func\b)
+      captures:
+        1: storage.modifier.ownership.borrowing.swift
+        2: storage.modifier.ownership.consuming.swift
 
   modifier-actor-isolation:
     - match: \b(nonisolated)\b(?=\s|$)
@@ -1025,6 +1047,12 @@ contexts:
     - match: \b(isolated)\b(?=\s|$)
       captures:
         1: storage.modifier.actor-isolation.isolated.swift
+
+    # SE-0377 borrowing / consuming parameter ownership (Swift 5.9)
+    - match: \b(?:(borrowing)|(consuming))\b(?=\s+{{identifier}})
+      captures:
+        1: storage.modifier.ownership.borrowing.swift
+        2: storage.modifier.ownership.consuming.swift
 
   ### [ Scoped Expressions ] ############################################################
 
