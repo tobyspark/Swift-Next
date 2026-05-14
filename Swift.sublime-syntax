@@ -924,6 +924,10 @@ contexts:
     - match: \b(nonisolated)\b(?=\s|$)
       captures:
         1: storage.modifier.actor-isolation.nonisolated.swift
+    # SE-0336 distributed actor / distributed func
+    - match: \b(distributed)\b(?=\s|$)
+      captures:
+        1: storage.modifier.distributed.swift
 
   modifier-reference-counting:
     - match: \bunowned\b
