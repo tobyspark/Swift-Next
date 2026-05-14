@@ -156,6 +156,7 @@ contexts:
     - include: declaration-variable
     - include: declaration-typealias
     - include: declaration-func
+    - include: declaration-macro
     - include: declaration-enum
     - include: declaration-struct
     - include: declaration-class
@@ -1316,6 +1317,21 @@ contexts:
         - generic-parameter-clause-declaration-pop
         - declaration-func-name
 
+  # SE-0382 Expression Macros (Swift 5.9). Same shape as func.
+  declaration-macro:
+    - match: \b(macro)\b\s*
+      captures:
+        1: keyword.declaration.macro.swift
+      push:
+        - - meta_scope: meta.macro.swift
+          - include: immediately-pop
+        - declaration-trailing-signature
+        - - meta_content_scope: meta.entity.name.macro.swift
+          - include: immediately-pop
+        - parameter-list-pop
+        - generic-parameter-clause-declaration-pop
+        - declaration-func-name
+
   # Alternative context structure to capture a code-block as a "body":
   #
   # declaration-func-body:
@@ -1701,6 +1717,30 @@ contexts:
           pop: 1
         - match: '\b(?:__always|never)\b'
           scope: constant.language.attribute-option.swift
+        - include: else-pop
+
+    # SE-0382 Expression Macros / SE-0389 Attached Macros (Swift 5.9)
+    - match: (@)\s*\b(freestanding|attached)\b\s*(\()
+      captures:
+        1: meta.annotation.swift punctuation.definition.annotation.swift
+        2: meta.annotation.identifier.swift support.function.annotation.swift
+        3: punctuation.section.parens.begin.swift
+      push:
+        - meta_content_scope: meta.annotation.parameters.swift
+        - match: \)
+          scope: punctuation.section.parens.end.swift
+          pop: 1
+        - match: |-
+            \b(?:
+              expression | declaration | accessor | memberAttribute
+              | member   | peer        | conformance | extension
+              | preamble | body        | names      | arbitrary
+              | named    | prefixed    | suffixed   | overloaded
+            )\b
+          scope: constant.language.attribute-option.swift
+        - include: parameter-list
+        - include: string-literal
+        - include: punctuations
         - include: else-pop
 
     - match: |-
@@ -2152,6 +2192,13 @@ contexts:
         - - match: (?=\()
             set: parameter-list-pop
           - include: else-pop
+
+    # SE-0382 Macro Expansion Expression (Swift 5.9). Must come after the
+    # builtins above so #file etc. still take precedence.
+    - match: (\#)({{identifier}})(?=\s*[(<])
+      captures:
+        1: punctuation.definition.preprocessor.swift
+        2: variable.function.macro.swift
 
   ### [ Supports ] ######################################################################
 
