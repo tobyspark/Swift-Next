@@ -734,6 +734,16 @@ contexts:
   ### [ Keywords ] ######################################################################
 
   keyword-operators:
+    # SE-0393 Pack expansion `repeat each pack` (Swift 5.9). Must precede
+    # the keyword-control-flows `repeat` rule. `each` is purely contextual
+    # and is scoped wherever it appears followed by an identifier.
+    - match: \b(repeat)\b(?=\s+each\b|\s*\()
+      captures:
+        1: keyword.operator.expansion.repeat.swift
+    - match: \b(each)\b(?=\s+{{identifier}})
+      captures:
+        1: keyword.operator.expansion.each.swift
+
     # try-operator
     - match: \b(try(?![?!]))\b|(try)(?=\?)|\b(try)\b(?=\!)
       captures:
@@ -1840,6 +1850,10 @@ contexts:
     - match: '>'
       scope: punctuation.definition.generic.end.swift
       pop: 1
+    # SE-0393 `each` in generic arguments (Swift 5.9)
+    - match: \b(each)\b
+      captures:
+        1: keyword.operator.expansion.each.swift
     - match: (<)(?=[{{generic_clause_chars_call_site}}]+>)
       captures:
         1: punctuation.definition.generic.begin.swift
@@ -1882,6 +1896,10 @@ contexts:
 
   generic-parameter-clause-declaration-body:
     - meta_scope: meta.generic.swift
+    # SE-0393 `<each T>` pack parameter (Swift 5.9)
+    - match: \b(each)\b
+      captures:
+        1: keyword.operator.expansion.each.swift
     - match: ({{identifier}})\s*(?=,)
       captures:
         1: variable.parameter.type.swift
